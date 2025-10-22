@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Panier</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">🛒 Votre Panier</h1>
+
+    {% if cart_items %}
+        <table class="table table-bordered bg-white shadow-sm">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                    <th>Prix total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+
+                    <!-- Formulaire pour mettre à jour la quantité -->
+                    <td>
+                        <form method="post" action="{% url 'update_cart' item.id %}" class="d-flex">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control me-2" style="width: 80px;">
+                            <button type="submit" class="btn btn-success btn-sm">✅</button>
+                        </form>
+                    </td>
+
+                    <td>{{ item.total_price }} TND</td>
+
+                    <!-- Bouton pour supprimer l'article -->
+                    <td>
+                        <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger btn-sm">❌</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h4 class="text-end mt-3">Total : <strong>{{ total }} TND</strong></h4>
+    {% else %}
+        <p class="text-center">Votre panier est vide 😢</p>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-secondary">⬅️ Continuer vos achats</a>
+    </div>
+</div>
+
+</body>
+</html>
